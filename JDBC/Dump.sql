@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS `firstdb`
-CREATE DATABASE `firstdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+DROP DATABASE IF EXISTS `firstdb`;
+CREATE DATABASE `firstdb`; 
 USE `firstdb`;
 -- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
