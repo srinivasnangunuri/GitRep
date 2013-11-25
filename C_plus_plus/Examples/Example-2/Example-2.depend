@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1379136676 source:c:\documents and settings\administrator\my documents\example-2\src\assignment.cpp
+	"Assignment.h"
+
+1379136841 c:\documents and settings\administrator\my documents\example-2\include\assignment.h
+	<iostream>
+	"DateTime.h"
+
+1379136876 c:\documents and settings\administrator\my documents\example-2\include\datetime.h
+	<iostream>
+	"Date.h"
+	"Time.h"
+
+1379136769 c:\documents and settings\administrator\my documents\example-2\include\date.h
+
+1379136748 c:\documents and settings\administrator\my documents\example-2\include\time.h
+
+1379136871 source:c:\documents and settings\administrator\my documents\example-2\src\datetime.cpp
+	<stdio.h>
+	<cstring>
+	"DateTime.h"
+
+1379136895 source:c:\documents and settings\administrator\my documents\example-2\src\finalexam.cpp
+	"FinalExam.h"
+
+1379136898 c:\documents and settings\administrator\my documents\example-2\include\finalexam.h
+	<iostream>
+	"Assignment.h"
+
+1379136918 source:c:\documents and settings\administrator\my documents\example-2\src\passfailactivity.cpp
+	"PassFailActivity.h"
+
+1379136921 c:\documents and settings\administrator\my documents\example-2\include\passfailactivity.h
+	<iostream>
+	"Assignment.h"
+

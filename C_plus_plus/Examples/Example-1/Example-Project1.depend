@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1379107958 source:c:\documents and settings\administrator\my documents\example-project1\main.cpp
+	<iostream>
+	"Rectangle.h"
+
+1379107693 c:\documents and settings\administrator\my documents\example-project1\include\rectangle.h
+	<string>
+	<iostream>
+
+1379107576 source:c:\documents and settings\administrator\my documents\example-project1\src\rectangle.cpp
+	"Rectangle.h"
+
+1379107809 source:c:\documents and settings\administrator\my documents\example-project1\src\room.cpp
+	"Room.h"
+
+1379107888 c:\documents and settings\administrator\my documents\example-project1\include\room.h
+	<iostream>
+
+1379107847 source:c:\documents and settings\administrator\my documents\example-project1\src\house.cpp
+	"House.h"
+
+1379107953 c:\documents and settings\administrator\my documents\example-project1\include\house.h
+	<iostream>
+
