@@ -1,30 +1,22 @@
-<?php
-include("Config.php");
+<?php 
+include("config.php");
+$user = $_REQUEST['username'];
+$pass = $_REQUEST['password'];;
+
+$userquery = "SELECT * FROM admin 
+WHERE username = '".$user."' and passcode = '".$pass."'" ;
+$result = mysql_query($userquery);
+$count = mysql_num_rows($result);
+$row = mysql_fetch_array($result);
+$username = $row['username'];
+
+if($count == 1) {
 session_start();
-
-// username and password sent from Form
-$myusername=addslashes($_POST['username']);
-$mypassword=addslashes($_POST['password']);
-$error = "";
-$sql="SELECT id FROM admin WHERE username='$myusername' and passcode='$mypassword'";
-$result=mysql_query($sql);
-$row=mysql_fetch_array($result);
-$active=$row['active'];
-$count=mysql_num_rows($result);
-
-
-// If result matched $myusername and $mypassword, table row must be 1 row
-if($count==1)
-{
-//session_register("myusername");
-$_SESSION['login_user']=$myusername;
-
+$_SESSION['login_user'] = $username;
 header("location: welcome.php");
+}else{
+echo "User Invalid";
 }
-else
-{
-$error="Your Login Name or Password is invalid";
-}
-echo $error;
-echo "<br/><br/><a href=\"login.php\">Login</a>";
+
+
 ?>
