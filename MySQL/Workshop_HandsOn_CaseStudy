@@ -1,0 +1,112 @@
+-------- EMPLOYEE TABLE CREATION AND DEFINING FIELDS
+CREATE TABLE employee (`Employee_ID` INT(10) NOT NULL,
+`First_Name` VARCHAR(45) NOT NULL,
+`Last_Name` VARCHAR(45) NOT NULL,
+`Title` varchar(30) NOT NULL, `stamp` TIMESTAMP NULL,
+PRIMARY KEY (`Employee_ID`));
+
+select * from employee;
+desc employee_rec;
+
+alter table employee modify first_name varchar(100);
+
+alter table employee rename employee_rec;
+
+alter table employee_rec change first_name fname varchar(50);
+
+alter table employee drop column employee_id;
+
+alter table employee_rec add column age INT(5);
+
+alter table employee_rec add EMPID INT(5);
+
+alter table employee_rec add primary key (empid);
+
+------------------ DESCRIBE
+DESC EMPLOYEE_REC;
+
+---------------------------------------------- INSERT DATA
+INSERT INTO employee_rec (employee_id,fname,
+last_name,title,age)
+VALUES (1300,'John','Cam','Senior Designer',26);
+
+INSERT INTO employee_rec VALUES (1302,'Sierra',
+'Paul','SE',
+'2013-10-26 12:05:00',28);
+
+------------------------------------------------------ 
+---------------------------------------------------GENERAL QUERIES
+SELECT ER.EMPLOYEE_ID,ER.FNAME FROM EMPLOYEE_REC ER;
+
+select * from employee_rec WHERE age>26;
+
+--------------------------------------- FETCH EMPLOYEES WITH AGE RANGING FROM 25 TO 27
+
+select * from employee_rec WHERE age BETWEEN 25 
+AND 27;
+
+SELECT COUNT(*) EMPLOYEE_COUNT FROM EMPLOYEE_REC;
+------------------------------   Excercise
+Create new table DEPT with columns 
+-- dept_id (primary key) int(10),
+-- dept_name varchar(50),
+-- dept_cat varchar(2),(have ca tegory A,B,C)  
+-- dept_owner int(5) [This field matches -- Employee_id values in employee table -- to later help us fetch common records]
+------------------------------------ CREATING DEPT TABLE
+CREATE TABLE `dept` 
+(`dept_id` INT(10) NOT NULL, 
+ `dept_name` VARCHAR(50) NOT NULL,
+ `dept_cat` VARCHAR(2) NOT NULL,
+ `dept_owner` int(5), PRIMARY KEY (`dept_id`))
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO DEPT VALUES (4,'HR','C',1302);
+
+select * from dept;
+
+UPDATE DEPT SET DEPT_NAME = 'Marketing'
+WHERE DEPT_ID = 3;
+COMMIT;
+
+ALTER TABLE DEPT ADD UNIQUE KEY (DEPT_NAME);
+
+DELETE FROM DEPT WHERE DEPT_ID = 3;
+
+SELECT * FROM DEPT ORDER BY DEPT_NAME DESC;
+---------------------------------------------------- AGGREGATION
+SELECT avg(dept_owner) AS senior_emp,dept_cat AS CATEGORY 
+FROM dept GROUP BY dept_cat HAVING senior_emp >= 1302;
+
+SELECT * FROM DEPT;
+
+---------------------------------------------------- INNER JOINS
+SELECT * FROM EMPLOYEE_REC;
+SELECT E.AGE,E.EMPLOYEE_ID,D.DEPT_NAME,D.DEPT_CAT FROM 
+EMPLOYEE_REC AS E,DEPT AS D WHERE E.EMPLOYEE_ID = D.DEPT_OWNER;
+
+------------------------------------------------------------------OUTER  JOINS
+SELECT E.AGE,E.EMPLOYEE_ID,D.DEPT_NAME,D.DEPT_CAT FROM 
+EMPLOYEE_REC E LEFT OUTER JOIN DEPT D ON E.EMPLOYEE_ID = D.DEPT_OWNER;
+
+------------------------------------------------ Exercise ---------------------------------------------------
+-- FETCH MAX(AGE),DEPT_NAME,DEPT_CAT
+-- FROM EMPLOYEE,DEPT BY CATEGORY 
+-- i.e. FETCH MAXIMUM EMPLOYEE AGE EMPLOYEE INFORMATION FROM 
+-- EACH CATEGORY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
