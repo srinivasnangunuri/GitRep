@@ -1,0 +1,276 @@
+                                                                                   
+ 
+
+                           
+
+MYSQL ADMINISTRATION AND PERFORMANCE TUNING
+
+
+                                                                                               
+Srinivas Nangunuri
+UT Dallas, Computer Science Outreach
+
+ 
+                                            
+
+
+
+                          
+                                      
+
+
+OUTLINE:
+
+MySql is the current hottest choice for enterprise ventures as the most robust, stable, agile, fastest, light weighted and cost effective RDBMS in the Open Source zone.
+  
+MySql software is available under the GNU General Public License, and also under the commercial licensing sector.
+
+MySql 5.5.x Community Edition will be referred in this Guide.
+
+
+
+Key Features:
+
+     -     Runs smoothly even on over 256 MB RAM machine.
+-	ACID compliant transactions atomicity, consistency, isolation, durability Commit, Rollback, crash recovery abilities 
+      (Records are affected when all the DMLs in a transaction are     
+      Successful. i.e. on issuing ‘commit’. If either of the Updations in a  
+      Transaction fails; none of the records are affected)
+-	Cross-platform support
+-	Support for huge tables and databases
+-	Sub-queries
+-	Stored Procedures
+-	Triggers
+-	Support for most SQL 92 syntax
+-	Row level Locking and Indexing
+-	Full Text search
+-	Cursors
+-	Replication and Clustering
+-	Multi-Threaded Multi-User                              and many more …
+        
+       
+     Shortcomings:
+
+-	Views with sub-queries
+-	Packages
+-	Dynamic Sequences
+-	Mail API
+
+          
+
+INSTALLATION:
+
+User friendly Installation wizard is available.
+InnoDB is used as the default database (Full ACID Compliant)
+Refer the MySql Installation manual shared: MySQL-Server-Installation.pdf
+for a complete picture.
+
+BASIC CONFIGURATION SETUP:
+
+ We need to edit/amend the my.ini / my.cnf file as follows, for an optimized server Performance based on our requirement.
+
+
+
+
+
+  
+ PARAMETERS OF INTEREST ON FLY:
+
+   bind-address = SERVER IP 
+ #SERVER IP is the MYSQL Server’s logical host IP address  
+
+ Default-storage-engine=InnoDB 
+ # Default storage engine to be used for the tables. Recommended for 
+   transactional systems needing incentives like ‘Save points’ and ‘rollbacks’ . 
+
+ Skip-name-resolve  
+ #Disables DNS host name lookup thus allowing remote machines to connect to MYSQL. 
+ 
+ max_connections 
+ #The maximum number of connections MYSQL will provide. 
+
+wait_timeout 
+#The number of seconds the server waits for activity on a non-interactive connection before closing it. 
+1	 
+interactive_timeout 
+#The number of seconds the server waits for activity on a non-interactive connection before closing it. 
+
+ lower_case_table_names=1 
+#MYSQL is case-sensitive. This parameter overrides the case-sensitivity. 
+
+max_allowed_packet 
+#The maximum size of the packet that will be retrieved from the database. Keep it high if   
+  the application has BLOB reads. 
+1	
+transaction_isolation = READ-COMMITTED 
+#Results of all committed transactions become visible to the next statement. 
+  
+DATABASE OPTIMIZATION:
+     
+[mysqld]
+    #turn on binary logging and slow query logging
+    log-bin
+    log-slow-queries
+   
+    set-variable  = innodb_log_file_size = 20M
+
+    #set buffer pool size to 50 – 80% of your computer’s memory
+    Set-variable = innodb_buffer_pool_size = 70M
+    Set-variable = innodb_additional_mem_pool_size = 10M
+ 
+    # set the log file size to around 25% of buffer pool size
+    Set-variable = innodb_log_file_size = 20M
+    Set-variable = innodb_log_buffer_size = 8M
+
+   innodb_data_file_path=ibdata1:500M:autoextend 
+   #To set up the InnoDB tablespace files. 
+
+    Innodb_flush_log_at_trx_commit = 1 
+    # set this to 1 if u got to preserve few last transactions.
+
+    innodb_data_file_path=ibdata1:500M:autoextend 
+
+    innodb_flush_method = O_DIRECT 
+    # This parameter will reduce the memory utilization of MYSQL process. Hence 
+    no swapping will be done by MYSQL. 
+
+   innodb_file_io_threads = 4 – 6
+
+   innodb_thread_concurrency = 4 
+   # Number of threads allowed inside the InnoDB kernel. 
+
+   innodb_lock_wait_timeout 
+   #How long an InnoDB transaction should wait for a lock to be granted before                      
+    being  rolled back? 
+
+  
+
+
+
+BEGINNINING WITH CRUCIAL ADMINISTRATION : SECURITY INCEPTION
+
+
+•	User Management :
+
+-	The foremost security measures one has to ensure for an Intrusion free Server setup are as follows :
+
+1.	Provide access to authorized users for specific relevant schemas.
+2.	Grant Restricted entrance to the schema user, allowing only to      
+perform appropriate activities, and deprived of ‘Super privileges’.
+3.	Only the ‘Root’ user is made the Administrator with ’Super privileges. (Like altering the user table in the mysql database).
+
+
+*Creep in: 
+Access to MySql instance is defined from the MySql database users created and NOT from the users used to login to the Operating System.
+
+The ‘root’ @ ‘localhost’ is made the ‘Super user’ with all privileges, optionally providing the ‘root login’ from ‘remote machines’ with the ‘Super user’ rights. 
+
+Hence the user privileges are granted considering the access from ‘user@host’ pattern in particular.
+           
+
+Connecting to the MySql instance from your shell prompt:
+
+Shell > mysql  -h localhost –u root –p <┘
+Shell > *****
+mysql>
+
+(h: host; u: user; p: password if set during installation) 
+
+The subsequent practices are pursued to facilitate above discussed statements.
+
+# Protect the Root access: Set the root password if not set
+
+  -  mysql.user table defines initial MySql user accounts and their privilege grants: 
+  
+mysql> update mysql.user set password=PASSWORD (‘rootpw’) where User='root' and Host = ‘localhost’; 
+
+# Create User | Provide access and connection to the schema on contract.
+
+
+MySql accounts can be created in two ways.
+Either use statements intended for creating accounts or manipulate the Grant tables in mysql database directly using INSERT, UPDATE.
+The first manner is preferred for it is less error prone and a concise way. 
+mysql> CREATE USER ‘Jeffrey’@’%’ IDENTIFIED BY ‘mypass’;
+
+Creates the user ‘Jeffrey’ authenticated with password ‘mypass’, with very minimal access privileges. The user merely can establish the connection.
+
+
+•	Access Control | Stage 2 : Request Verification 
+
+# knocking out non super users- access to mysql schema is the primary task to prevent unauthorized peep into the mysql ‘Grant tables’, since the administration activity and privilege assignment is carried out revising these records.
+
+As a good practice a non super user created is provided admittance only to the application concerned schema with adequate privileges to execute SQL queries like ‘SELECT, UPDATE, INSERT, DELETE, COMMIT, CALL,’ 
+
+Permissions to ‘CREATE, DROP, ROLL BACK, ALTER, etc’ are provisioned as the necessity is triggered.
+
+As the user is connected, The Server validates the connection and designates resources based on the privileges set coming from user, db, host, tables_priv, columns_priv, or procs_priv grant tables of mysql schema.
+
+A user tagged with all privileges in the ‘user’ grant table has permissions to edit any database and run administrator utilities like ‘mysqladmin shutdown’, for the grants here assigned are on global basis.
+ 
+Hence, it is wise to grant rights in the user table to administrative users while tagging ‘N’ for others to barely fund privileges at specific levels.
+
+User's database-specific privileges are computed as the intersection (not the union!) of the privileges in the db and host table entries; that is, the privileges that are 'Y' in both entries.
+
+Expressed in Boolean terms, the preceding description of how a user's privileges are calculated may be summarized as here:
+
+Global privileges
+OR (database privileges AND host privileges)
+OR table privileges
+OR column privileges
+OR routine privileges
+Global Privileges:
+
+mysql> Grant All on *.* to ‘jeffrey’@’localhost’ with grant option;
+Global privileges are administrative and apply to all databases on a server.
+‘with grant option’ empowers the user to grant/revoke privileges owned  to other member users. 
+
+
+
+Database Privileges:
+
+mysql> Grant SELECT, INSERT, UPDATE, DELETE, EXECUTE on APPDB.* to ‘Jeffrey’@’%’;
+
+The db grant table is populated accordingly to reflect above allowed actions.
+The entry into host table is done by ‘INSERT’, and not applying ‘GRANT’ option.
+
+Use mysql>show privileges; utility to take a complete picture of the grants available for allocations.
+
+*Creep in: 
+Applying privileges utilizing ‘GRANT’ option immediately causes the server to act, wherein assigning via ‘INSERT/UPDATE’ options requires the server to be restarted or issue a ‘FLUSH PRIVILEGES/ RELOAD’ to reflect.
+
+mysql> Grant USAGE on APPDB.* to 'jeffrey'@'localhost' with MAX_QUERIES_PER_HOUR 90; 
+Grants the user Jeffrey with no privileges and an allowance of 90 queries in an hour. Creates the user if not exists with no bonded password.
+
+Table Privileges:
+
+Mysql> GRANT SELECT, INSERT ON mydb.mytbl to 'someuser'@'somehost';
+MySql stores table privileges in the mysql.tables_priv table
+
+Column Privileges:
+
+GRANT SELECT (col1), INSERT (col1, col2) ON mydb.mytbl to 'user’@’host';
+Column privileges apply to single columns in a given table, and limited only to tag SELECT, INSERT and UPDATE.
+
+Stored Routine Privileges:
+
+ALTER ROUTINE, EXECUTE, and GRANT OPTION are specified at this level.
+Mysql>GRANT EXECUTE ON PROCEDURE mydb.myproc to 'user'@'host';
+
+
+
+
+*Creep in: 
+The CREATE USER, FILE, PROCESS, RELOAD, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, SHUTDOWN, and SUPER privileges are administrative and can only be granted globally .
+
+Revoke Privileges:
+
+mysql> Revoke ALL PRIVILEGES, GRANT OPTION on *.*  FROM ‘user’@’localhost’;’
+
+To use this REVOKE syntax, you must have the global CREATE USER privilege or the UPDATE privilege for the mysql database
+
+
+
+
+
+
+                  
